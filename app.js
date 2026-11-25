@@ -56,7 +56,7 @@ form.addEventListener('submit', async (e) => {
     phone: document.getElementById('phone').value.trim(),
     productName: document.getElementById('productName').value.trim(),
     productCode: document.getElementById('productCode').value.trim(),
-    activationDate: document.getElementById('activationDate').value,
+    activationDate: document.getElementById('activationDate').value.split('-').reverse().join('/'),
     account: document.getElementById('account').value.trim(),
     password: document.getElementById('password').value,
     securityPassword: document.getElementById('securityPassword').value,
