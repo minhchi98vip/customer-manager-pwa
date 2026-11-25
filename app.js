@@ -50,13 +50,23 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
   if (btnSave.disabled) return;
   
+  // Lấy dữ liệu và chuyển đổi ngày tháng từ yyyy-mm-dd sang dd/mm/yyyy
+  let rawDate = document.getElementById('activationDate').value;
+  let formattedDate = '';
+  if (rawDate) {
+    const parts = rawDate.split('-'); // yyyy-mm-dd
+    if (parts.length === 3) {
+      formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`; // dd/mm/yyyy
+    }
+  }
+
   const data = {
     customerName: document.getElementById('customerName').value.trim(),
     address: document.getElementById('address').value.trim(),
     phone: document.getElementById('phone').value.trim(),
     productName: document.getElementById('productName').value.trim(),
     productCode: document.getElementById('productCode').value.trim(),
-    activationDate: document.getElementById('activationDate').value.split('-').reverse().join('/'),
+    activationDate: formattedDate, // Đã được format lại thành dd/mm/yyyy
     account: document.getElementById('account').value.trim(),
     password: document.getElementById('password').value,
     securityPassword: document.getElementById('securityPassword').value,
@@ -115,7 +125,6 @@ document.getElementById('btn-search').addEventListener('click', async () => {
       return;
     }
     
-    // Hiển thị danh sách kết quả
     resultsEl.innerHTML = res.results.map(r => `
       <div class="result-card" onclick="showDetail('${r.id}')">
         <h3>${escapeHtml(r.customerName)}</h3>
@@ -136,7 +145,7 @@ async function showDetail(id) {
   const detailEl = document.getElementById('detail-panel');
   
   if (!id) {
-    alert('Lỗi: Không tìm thấy ID của bản ghi này. Có thể dữ liệu cũ chưa được tạo ID (cột O).');
+    alert('Lỗi: Không tìm thấy ID của bản ghi này.');
     return;
   }
 
