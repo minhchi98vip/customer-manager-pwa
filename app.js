@@ -82,19 +82,27 @@ form.addEventListener('submit', async (e) => {
   if (!data.productCode) return showMessage(document.getElementById('form-message'), 'Vui lòng nhập mã sản phẩm', 'error');
   if (!data.activationDate) return showMessage(document.getElementById('form-message'), 'Vui lòng chọn ngày kích hoạt', 'error');
   
-  btnSave.disabled = true;
+    btnSave.disabled = true;
   btnSave.textContent = 'Đang lưu...';
   
+  // 1. Giả lập lưu thành công ngay lập tức để người dùng thấy phản hồi
+  showMessage(document.getElementById('form-message'), '⏳ Đang gửi dữ liệu lên Google Sheets...', 'success');
+  
+  // 2. Reset form ngay để nhập khách tiếp theo
+  const formData = { ...data }; // Lưu tạm dữ liệu
+  form.reset(); 
+  document.getElementById('customerName').focus();
+  
+  // 3. Gửi API ngầm phía sau
   try {
-    const res = await apiCall('add', { data }, 'POST');
+    const res = await apiCall('add', { data: formData }, 'POST');
     if (res.success) {
-      showMessage(document.getElementById('form-message'), '✅ Đã lưu thông tin khách hàng thành công!', 'success');
-      form.reset();
+      showMessage(document.getElementById('form-message'), '✅ Đã lưu thành công!', 'success');
     } else {
-      showMessage(document.getElementById('form-message'), `❌ ${res.error}`, 'error');
+      showMessage(document.getElementById('form-message'), `❌ Lỗi: ${res.error}`, 'error');
     }
   } catch (err) {
-    showMessage(document.getElementById('form-message'), '❌ Không kết nối được server. Kiểm tra mạng và thử lại.', 'error');
+    showMessage(document.getElementById('form-message'), '❌ Lỗi mạng. Dữ liệu có thể chưa được lưu!', 'error');
   } finally {
     btnSave.disabled = false;
     btnSave.textContent = 'Lưu thông tin';
