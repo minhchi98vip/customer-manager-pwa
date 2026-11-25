@@ -214,6 +214,7 @@ async function copyInfo(id) {
     const res = await apiCall('getById', { id });
     if (!res.success) throw new Error(res.error);
     const r = res.record;
+
     const text = `Tên: ${r.customerName}
 SĐT: ${r.phone}
 Địa chỉ: ${r.address}
@@ -221,9 +222,9 @@ Sản phẩm: ${r.productName} (${r.productCode})
 Ngày K.H: ${r.activationDate}
 Bảo hành: ${r.warranty}
 TK: ${r.account} | MK: ${r.password}
-Giá: ${r.price ? Number(r.price).toLocaleString('vi-VN') + 'đ' : '-'}
-Phụ kiện: ${r.accessories !== '' && r.accessories != null ? Number(String(r.accessories).replace(/[^\d-]/g, '')).toLocaleString('vi-VN') + ' đ' : '-'}
-    
+Giá: ${r.price ? Number(r.price).toLocaleString('vi-VN') + ' đ' : '-'}
+Phụ kiện: ${r.accessories !== '' && r.accessories != null ? Number(String(r.accessories).replace(/[^\d-]/g, '')).toLocaleString('vi-VN') + ' đ' : '-'}`;
+
     await navigator.clipboard.writeText(text);
     alert('Đã sao chép thông tin vào bộ nhớ tạm!');
   } catch (err) {
