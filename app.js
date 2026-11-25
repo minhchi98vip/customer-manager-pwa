@@ -44,21 +44,8 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 // LOAD OPTIONS
 // ============================================================
 async function loadOptions() {
-  try {
-    const res = await apiCall('options');
-    if (!res.success) throw new Error(res.error);
-    
-    const productSelect = document.getElementById('productName');
-    const memorySelect = document.getElementById('memoryCard');
-    
-    productSelect.innerHTML = '<option value="">-- Chọn --</option>' +
-      res.data.products.map(p => `<option value="${p}">${p}</option>`).join('');
-    memorySelect.innerHTML = '<option value="">-- Chọn --</option>' +
-      res.data.memoryCards.map(m => `<option value="${m}">${m}</option>`).join('');
-  } catch (err) {
-    console.error('Load options failed:', err);
-    showMessage(document.getElementById('form-message'), 'Không tải được danh sách sản phẩm/thẻ nhớ. Kiểm tra kết nối.', 'error');
-  }
+  // Đã chuyển sang nhập tay, không cần tải danh sách từ Google Sheets nữa
+  return; 
 }
 
 // ============================================================
