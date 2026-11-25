@@ -185,7 +185,7 @@ async function showDetail(id) {
       </div>
       <div class="detail-row"><div class="label">Đơn giá:</div><div class="value">${r.price ? Number(r.price).toLocaleString('vi-VN') + ' đ' : '-'}</div></div>
       <div class="detail-row"><div class="label">Thẻ nhớ:</div><div class="value">${escapeHtml(r.memoryCard || '-')}</div></div>
-      <div class="detail-row"><div class="label">Phụ kiện:</div><div class="value">${escapeHtml(r.accessories || '-')}</div></div>
+      <div class="detail-row"><div class="label">Phụ kiện:</div><div class="value">${r.accessories ? Number(r.accessories).toLocaleString('vi-VN') + ' đ' : '-'}</div></div>
       <div class="detail-row"><div class="label">Ghi chú:</div><div class="value">${escapeHtml(r.note || '-')}</div></div>
       
       <div class="detail-actions">
