@@ -221,7 +221,8 @@ Sản phẩm: ${r.productName} (${r.productCode})
 Ngày K.H: ${r.activationDate}
 Bảo hành: ${r.warranty}
 TK: ${r.account} | MK: ${r.password}
-Giá: ${r.price ? Number(r.price).toLocaleString('vi-VN') + 'đ' : '-'}`;
+Giá: ${r.price ? Number(r.price).toLocaleString('vi-VN') + 'đ' : '-'}
+Phụ kiện: ${r.accessories ? Number(r.accessories).toLocaleString('vi-VN') + 'đ' : '-'}`;
     
     await navigator.clipboard.writeText(text);
     alert('Đã sao chép thông tin vào bộ nhớ tạm!');
