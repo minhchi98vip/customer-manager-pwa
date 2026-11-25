@@ -185,7 +185,7 @@ async function showDetail(id) {
       </div>
       <div class="detail-row"><div class="label">Đơn giá:</div><div class="value">${r.price ? Number(r.price).toLocaleString('vi-VN') + ' đ' : '-'}</div></div>
       <div class="detail-row"><div class="label">Thẻ nhớ:</div><div class="value">${escapeHtml(r.memoryCard || '-')}</div></div>
-      <div class="detail-row"><div class="label">Phụ kiện:<<div class="detail-row"><div class="label">Phụ kiện:</div><div class="value">${r.accessories !== '' && r.accessories != null ? Number(r.accessories).toLocaleString('vi-VN') + ' đ' : '-'}</div></div>
+      <div class="detail-row"><div class="label">Phụ kiện:</div><div class="value">${r.accessories !== '' && r.accessories != null ? Number(String(r.accessories).replace(/[^\d-]/g, '')).toLocaleString('vi-VN') + ' đ' : '-'}</div></div>
       <div class="detail-row"><div class="label">Ghi chú:</div><div class="value">${escapeHtml(r.note || '-')}</div></div>
       
       <div class="detail-actions">
@@ -222,7 +222,7 @@ Ngày K.H: ${r.activationDate}
 Bảo hành: ${r.warranty}
 TK: ${r.account} | MK: ${r.password}
 Giá: ${r.price ? Number(r.price).toLocaleString('vi-VN') + 'đ' : '-'}
-Phụ kiện: ${r.accessories ? Number(r.accessories).toLocaleString('vi-VN') + 'đ' : '-'}`;
+Phụ kiện: ${r.accessories !== '' && r.accessories != null ? Number(String(r.accessories).replace(/[^\d-]/g, '')).toLocaleString('vi-VN') + ' đ' : '-'}
     
     await navigator.clipboard.writeText(text);
     alert('Đã sao chép thông tin vào bộ nhớ tạm!');
