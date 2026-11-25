@@ -40,8 +40,6 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   });
 });
 
-// Đã bỏ hàm loadOptions vì chuyển sang nhập tay
-
 // ============================================================
 // THÊM KHÁCH HÀNG
 // ============================================================
@@ -50,25 +48,24 @@ const btnSave = document.getElementById('btn-save');
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
-  if (btnSave.disabled) return; // chống double-click
+  if (btnSave.disabled) return;
   
   const data = {
     customerName: document.getElementById('customerName').value.trim(),
     address: document.getElementById('address').value.trim(),
     phone: document.getElementById('phone').value.trim(),
-    productName: document.getElementById('productName').value.trim(), // Nhập tay
+    productName: document.getElementById('productName').value.trim(),
     productCode: document.getElementById('productCode').value.trim(),
-    activationDate: document.getElementById('activationDate').value, // yyyy-mm-dd
+    activationDate: document.getElementById('activationDate').value,
     account: document.getElementById('account').value.trim(),
     password: document.getElementById('password').value,
     securityPassword: document.getElementById('securityPassword').value,
     price: document.getElementById('price').value,
-    memoryCard: document.getElementById('memoryCard').value.trim(), // Nhập tay
+    memoryCard: document.getElementById('memoryCard').value.trim(),
     accessories: document.getElementById('accessories').value.trim(),
     note: document.getElementById('note').value.trim()
   };
   
-  // Validate
   if (!data.customerName) return showMessage(document.getElementById('form-message'), 'Vui lòng nhập tên khách hàng', 'error');
   if (!data.phone) return showMessage(document.getElementById('form-message'), 'Vui lòng nhập số điện thoại', 'error');
   if (!data.productName) return showMessage(document.getElementById('form-message'), 'Vui lòng nhập tên sản phẩm', 'error');
@@ -101,7 +98,7 @@ document.getElementById('btn-reset').addEventListener('click', () => form.reset(
 // ============================================================
 document.getElementById('btn-search').addEventListener('click', async () => {
   const keyword = document.getElementById('search-keyword').value.trim();
-  if (!keyword) return;
+  if (!keyword) return alert('Vui lòng nhập từ khóa tìm kiếm!');
   
   const type = document.querySelector('input[name="searchType"]:checked').value;
   const resultsEl = document.getElementById('search-results');
@@ -118,12 +115,13 @@ document.getElementById('btn-search').addEventListener('click', async () => {
       return;
     }
     
+    // Hiển thị danh sách kết quả
     resultsEl.innerHTML = res.results.map(r => `
       <div class="result-card" onclick="showDetail('${r.id}')">
         <h3>${escapeHtml(r.customerName)}</h3>
         <p>📞 ${escapeHtml(r.phone)}</p>
         <p>📦 ${escapeHtml(r.productName)} - ${escapeHtml(r.productCode)}</p>
-        <p>📅 Kích hoạt: ${r.activationDate} | BH: ${r.warranty}</p>
+        <p>📅 Kích hoạt: ${r.activationDate || '-'} | BH: ${r.warranty || '-'}</p>
       </div>
     `).join('');
   } catch (err) {
@@ -136,6 +134,12 @@ document.getElementById('btn-search').addEventListener('click', async () => {
 // ============================================================
 async function showDetail(id) {
   const detailEl = document.getElementById('detail-panel');
+  
+  if (!id) {
+    alert('Lỗi: Không tìm thấy ID của bản ghi này. Có thể dữ liệu cũ chưa được tạo ID (cột O).');
+    return;
+  }
+
   detailEl.innerHTML = '<p>Đang tải chi tiết...</p>';
   detailEl.classList.remove('hidden');
   
@@ -151,8 +155,8 @@ async function showDetail(id) {
       <div class="detail-row"><div class="label">Điện thoại:</div><div class="value">${escapeHtml(r.phone)}</div></div>
       <div class="detail-row"><div class="label">Sản phẩm:</div><div class="value">${escapeHtml(r.productName)}</div></div>
       <div class="detail-row"><div class="label">Mã sản phẩm:</div><div class="value">${escapeHtml(r.productCode)}</div></div>
-      <div class="detail-row"><div class="label">Ngày kích hoạt:</div><div class="value">${r.activationDate}</div></div>
-      <div class="detail-row"><div class="label">Bảo hành:</div><div class="value">${r.warranty}</div></div>
+      <div class="detail-row"><div class="label">Ngày kích hoạt:</div><div class="value">${r.activationDate || '-'}</div></div>
+      <div class="detail-row"><div class="label">Bảo hành:</div><div class="value">${r.warranty || '-'}</div></div>
       <div class="detail-row"><div class="label">Tài khoản:</div><div class="value">${escapeHtml(r.account || '-')}</div></div>
       <div class="detail-row">
         <div class="label">Mật khẩu:</div>
@@ -180,12 +184,12 @@ async function showDetail(id) {
 
 function togglePass(pass) {
   const el = document.getElementById('pass-display');
-  el.textContent = el.textContent === '••••••' ? pass : '••••••';
+  el.textContent = el.textContent === '••••••' ? (pass || 'Không có') : '••••••';
 }
 
 function toggleSecPass(pass) {
   const el = document.getElementById('sec-pass-display');
-  el.textContent = el.textContent === '••••••' ? pass : '••••••';
+  el.textContent = el.textContent === '••••••' ? (pass || 'Không có') : '••••••';
 }
 
 async function copyInfo(id) {
@@ -217,7 +221,7 @@ async function deleteRecord(id) {
     if (res.success) {
       alert('Đã xóa thành công!');
       document.getElementById('detail-panel').classList.add('hidden');
-      document.getElementById('btn-search').click(); // Tìm lại
+      document.getElementById('btn-search').click(); 
     } else {
       alert('Lỗi: ' + res.error);
     }
@@ -233,9 +237,6 @@ function escapeHtml(text) {
   }[m]));
 }
 
-// ============================================================
-// PWA SERVICE WORKER
-// ============================================================
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(err => console.log('SW reg failed:', err));
 }
